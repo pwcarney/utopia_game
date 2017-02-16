@@ -8,6 +8,9 @@ public class WarriorController : MonoBehaviour {
 	public string enemy;
 
 	[HideInInspector]
+	public bool killed = false;
+
+	[HideInInspector]
 	public List<GameObject> enemies;
 
 	Vector2[] path;
@@ -22,13 +25,18 @@ public class WarriorController : MonoBehaviour {
 		StartCoroutine (RefreshPath ());
 	}
 
+	void Update ()
+	{
+		if (killed)
+			Destroy (this.gameObject);
+	}
+
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.gameObject.tag == enemy) 
 		{
 			enemies.Remove (other.gameObject);
-			Destroy (other.gameObject);
-			destination = Vector2.zero;
+			other.gameObject.GetComponent<WarriorController> ().Kill ();
 		}
 	}
 
@@ -65,10 +73,10 @@ public class WarriorController : MonoBehaviour {
 
 		while (true) 
 		{
+			destination = (Vector2)GetCurrentDestination ();
+
 			if (destination == Vector2.zero) 
 			{
-				destination = (Vector2)GetCurrentDestination ();
-
 				yield return new WaitForSeconds (.25f);
 				continue;
 			}
@@ -111,5 +119,10 @@ public class WarriorController : MonoBehaviour {
 
 			}
 		}
+	}
+
+	public void Kill()
+	{
+		killed = true;
 	}
 }

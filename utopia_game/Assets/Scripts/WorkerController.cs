@@ -12,7 +12,7 @@ public class WorkerController : MonoBehaviour
 
 	void Start () 
 	{
-		float oil_patch_distance = 10000f;
+		float oil_patch_distance = Mathf.Infinity;
 		foreach(GameObject oil_patch in GameObject.FindGameObjectsWithTag("Oil"))
 		{
 			float dist_to_patch = Vector3.Distance (transform.position, oil_patch.transform.position);
@@ -23,7 +23,7 @@ public class WorkerController : MonoBehaviour
 			}
 		}
 
-		float collector_distance = 10000f;
+		float collector_distance = Mathf.Infinity;
 		foreach(GameObject collector in GameObject.FindGameObjectsWithTag("Collector"))
 		{
 			float dist_to_collector = Vector3.Distance (transform.position, collector.transform.position);
