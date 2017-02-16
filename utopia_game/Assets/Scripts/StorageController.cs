@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class StorageController : MonoBehaviour {
 
 	public GameObject workerPrefab;
-	public Text TotalOil;
 
 	/*GameObject tempTextBox = (GameObject.Instantiate (OilCount, Vector3.zero, Quaternion.identity));
 	TextMesh theText = tempTextBox.transform.GetComponent<TextMesh>();
@@ -51,6 +50,6 @@ public class StorageController : MonoBehaviour {
 	}
 	void SetOil ()
 	{
-		TotalOil.text = "Oil: " + oil.ToString();
+		GetComponentInChildren<TextMesh>().text = "Oil: " + oil.ToString();
 	}
 }
