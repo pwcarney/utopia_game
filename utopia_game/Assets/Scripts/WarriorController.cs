@@ -1,91 +1,115 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//
-//public class WarriorController : MonoBehaviour {
-//
-//	public Transform target;
-//	public float speed = 20;
-//
-//	Vector2[] path;
-//	int targetIndex;
-//
-//	void Start () 
-//	{
-//		StartCoroutine (RefreshPath ());
-//	}
-//
-//	Vector3 GetCurrentDestination()
-//	{
-//		if (!Pathfinding.IsPlayerReachable (player.GetComponent<Transform> ().position) && GetComponentInChildren<Renderer> ().isVisible) 
-//		{
-//			playerChase = false;
-//
-//			List<float> dists = new List<float>();
-//			for (int i = 0; i < corners.Length; i++)
-//			{
-//				dists.Add (Vector3.Distance (corners [i], player.GetComponent<Transform> ().position));
-//			}
-//			cornerInd = dists.IndexOf(dists.Max ());
-//		} 
-//		else if (Pathfinding.IsPlayerReachable (player.GetComponent<Transform> ().position)) 
-//		{
-//			playerChase = true;
-//		}
-//
-//		if (playerChase) 
-//		{
-//			return player.GetComponent<Transform> ().position;
-//		} 
-//		else 
-//		{
-//			return corners [cornerInd];
-//		}
-//	}
-//
-//	IEnumerator RefreshPath() 
-//	{
-//		Vector2 targetPositionOld = (Vector2)GetCurrentDestination() + Vector2.up;
-//
-//		while (true) 
-//		{
-//			if (targetPositionOld != (Vector2)GetCurrentDestination()) 
-//			{
-//				targetPositionOld = (Vector2)GetCurrentDestination();
-//
-//				path = Pathfinding.RequestPath (transform.position, GetCurrentDestination());
-//				StopCoroutine ("FollowPath");
-//				StartCoroutine ("FollowPath");
-//			}
-//
-//			yield return new WaitForSeconds (.25f);
-//		}
-//	}    
-//
-//	IEnumerator FollowPath() 
-//	{
-//		if (path.Length > 0) 
-//		{
-//			targetIndex = 0;
-//			Vector2 currentWaypoint = path [0];
-//
-//			while (true) 
-//			{
-//				if ((Vector2)transform.position == currentWaypoint) 
-//				{
-//					targetIndex++;
-//					if (targetIndex >= path.Length) {
-//						yield break;
-//					}
-//					currentWaypoint = path [targetIndex];
-//				}
-//
-//				transform.rotation = Quaternion.LookRotation(Vector3.forward, player.transform.position - transform.position);
-//				transform.position = Vector2.MoveTowards (transform.position, currentWaypoint, speed * Time.deltaTime);
-//
-//				yield return null;
-//
-//			}
-//		}
-//	}
-//}
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WarriorController : MonoBehaviour {
+
+	public float speed = 1;
+	public string enemy;
+
+	[HideInInspector]
+	public List<GameObject> enemies;
+
+	Vector2[] path;
+	int targetIndex;
+
+	Vector2 destination = Vector2.zero;
+
+	void Start () 
+	{
+		GetComponentInChildren<EnemyDetector> ().enemy = enemy;
+
+		StartCoroutine (RefreshPath ());
+	}
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.gameObject.tag == enemy) 
+		{
+			enemies.Remove (other.gameObject);
+			Destroy (other.gameObject);
+			destination = Vector2.zero;
+		}
+	}
+
+	Vector3 GetCurrentDestination()
+	{
+		if (enemies.Count > 0) 
+		{
+			Vector3 myPos = transform.position;
+
+			GameObject closest_choice = null;
+			float closest = Mathf.Infinity;
+
+			foreach (GameObject choice in enemies) 
+			{
+				float dist = Vector3.Distance (myPos, choice.transform.position);
+				if (dist < closest) 
+				{
+					closest = dist;
+					closest_choice = choice;
+				}
+			}
+
+			return closest_choice.transform.position;
+		} 
+		else 
+		{
+			return Vector3.zero;
+		}
+	}
+
+	IEnumerator RefreshPath() 
+	{
+		Vector2 targetPositionOld = destination + Vector2.up;
+
+		while (true) 
+		{
+			if (destination == Vector2.zero) 
+			{
+				destination = (Vector2)GetCurrentDestination ();
+
+				yield return new WaitForSeconds (.25f);
+				continue;
+			}
+
+			if (targetPositionOld != destination) 
+			{
+				targetPositionOld = destination;
+
+				path = Pathfinding.RequestPath (transform.position, destination);
+				StopCoroutine ("FollowPath");
+				StartCoroutine ("FollowPath");
+			}
+
+			yield return new WaitForSeconds (.25f);
+		}
+	}    
+
+	IEnumerator FollowPath() 
+	{
+		if (path.Length > 0) 
+		{
+			targetIndex = 0;
+			Vector2 currentWaypoint = path [0];
+
+			while (true) 
+			{
+				if ((Vector2)transform.position == currentWaypoint) 
+				{
+					targetIndex++;
+					if (targetIndex >= path.Length) {
+						yield break;
+					}
+					currentWaypoint = path [targetIndex];
+				}
+
+				//transform.rotation = Quaternion.LookRotation(Vector3.forward, player.transform.position - transform.position);
+				transform.position = Vector2.MoveTowards (transform.position, currentWaypoint, speed * Time.deltaTime);
+
+				yield return null;
+
+			}
+		}
+	}
+}
