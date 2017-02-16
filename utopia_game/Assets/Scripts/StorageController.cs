@@ -6,7 +6,11 @@ using UnityEngine.UI;
 public class StorageController : MonoBehaviour {
 
 	public GameObject workerPrefab;
-	public Text OilCount;
+	public Text TotalOil;
+
+	/*GameObject tempTextBox = (GameObject.Instantiate (OilCount, Vector3.zero, Quaternion.identity));
+	TextMesh theText = tempTextBox.transform.GetComponent<TextMesh>();
+	private theText.Text "The Text"; */
 
 	private int oil;
 
@@ -15,7 +19,7 @@ public class StorageController : MonoBehaviour {
 	{
 		SpawnWorker ();
 		oil = 0;
-		SetOilCount ();
+		SetOil();
 	}
 	
 	// Update is called once per frame
@@ -36,17 +40,17 @@ public class StorageController : MonoBehaviour {
 		Instantiate(workerPrefab, spawnPosition, Quaternion.identity);
 	}
 
+
 	void OnTriggerEnter2D (Collider2D other)
 	{
-		if (other.gameObject.CompareTag ("Worker"))
+		if (other.tag == "Worker")
 		{
 			oil = oil + 1;
-			SetOilCount ();
+			SetOil();
 		}
 	}
-
-	void SetOilCount ()
+	void SetOil ()
 	{
-		OilCount.text = "Oil: " + oil.ToString ();
+		TotalOil.text = "Oil: " + oil.ToString();
 	}
 }
