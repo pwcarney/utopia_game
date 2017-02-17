@@ -6,6 +6,8 @@ public class WarriorController : MonoBehaviour {
 
 	public float speed = 1;
 	public string enemy;
+	public float enemyDetectRadius;
+	public LayerMask unwalkableMask;
 
 	[HideInInspector]
 	public bool killed = false;
@@ -21,6 +23,7 @@ public class WarriorController : MonoBehaviour {
 	void Start () 
 	{
 		GetComponentInChildren<EnemyDetector> ().enemy = enemy;
+		GetComponentInChildren<CircleCollider2D> ().radius = enemyDetectRadius;
 
 		StartCoroutine (RefreshPath ());
 	}
@@ -77,22 +80,52 @@ public class WarriorController : MonoBehaviour {
 
 			if (destination == Vector2.zero) 
 			{
-				yield return new WaitForSeconds (.25f);
+				// There are no enemies
+				StopCoroutine ("Beeline");
+				StopCoroutine ("FollowPath");
+
+				yield return new WaitForSeconds (.05f);
 				continue;
 			}
 
-			if (targetPositionOld != destination) 
+			Vector2 currentPos = (Vector2)transform.position;
+			if (Physics2D.Raycast (
+				currentPos, 
+				destination - currentPos, 
+				enemyDetectRadius, 
+				unwalkableMask).collider == null) 
 			{
+				// Nothing in way, so just beeline toward destination
+				StopCoroutine ("FollowPath");
+				StopCoroutine ("Beeline");
+
+				StartCoroutine ("Beeline");
+			}
+			else if (targetPositionOld != destination) 
+			{
+				// We have to pathfind, boo hoo
 				targetPositionOld = destination;
 
 				path = Pathfinding.RequestPath (transform.position, destination);
 				StopCoroutine ("FollowPath");
+				StopCoroutine ("Beeline");
+
 				StartCoroutine ("FollowPath");
 			}
 
 			yield return new WaitForSeconds (.25f);
 		}
 	}    
+
+	IEnumerator Beeline() 
+	{
+		while (true) 
+		{
+			transform.position = Vector2.MoveTowards (transform.position, destination, speed * Time.deltaTime);
+
+			yield return null;
+		}
+	}
 
 	IEnumerator FollowPath() 
 	{

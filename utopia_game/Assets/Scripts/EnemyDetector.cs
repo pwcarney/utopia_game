@@ -20,7 +20,6 @@ public class EnemyDetector : MonoBehaviour {
 		{
 			if (!other.gameObject.GetComponent<WarriorController> ().killed) 
 			{
-				Debug.Log ("Found enemy!");
 				if (!parentController.enemies.Contains (other.gameObject))
 					parentController.enemies.Add (other.gameObject);
 			}
