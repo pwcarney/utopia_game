@@ -8,7 +8,7 @@ public class WorkerController : MonoBehaviour
 
 	private GameObject seeking_oil_patch;
 	private GameObject seeking_collector;
-	private bool hasOil = false;
+	public bool hasOil = false;
 
 	void Start () 
 	{
@@ -53,8 +53,10 @@ public class WorkerController : MonoBehaviour
 		{
 			hasOil = true;
 		} 
-		else if (other.tag == "Collector")
+		else if (other.tag == "Collector" && hasOil == true)
 		{
+
+			other.gameObject.GetComponent<StorageController>().oil++;
 			hasOil = false;
 		}
 	}

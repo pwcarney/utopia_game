@@ -11,7 +11,7 @@ public class StorageController : MonoBehaviour {
 	TextMesh theText = tempTextBox.transform.GetComponent<TextMesh>();
 	private theText.Text "The Text"; */
 
-	private int oil;
+	public int oil;
 
 	// Use this for initialization
 	void Start () 
@@ -42,9 +42,8 @@ public class StorageController : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D other)
 	{
-		if (other.tag == "Worker")
+		if (other.tag == "Robot")
 		{
-			oil = oil + 1;
 			SetOil();
 		}
 	}
