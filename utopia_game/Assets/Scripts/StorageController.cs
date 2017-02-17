@@ -13,6 +13,7 @@ public class StorageController : MonoBehaviour {
 
 	public int oil;
 
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -29,8 +30,14 @@ public class StorageController : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		SpawnWorker ();
+		if (oil >= 5)
+		{
+			SpawnWorker ();
+			oil = oil - 5;
+			SetOil();
+		}
 	}
+
 
 	void SpawnWorker()
 	{
