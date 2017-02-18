@@ -12,6 +12,7 @@ public class StorageController : MonoBehaviour {
 	private theText.Text "The Text"; */
 
 	public int oil;
+	private int x;
 
 
 	// Use this for initialization
@@ -19,6 +20,7 @@ public class StorageController : MonoBehaviour {
 	{
 		SpawnWorker ();
 		oil = 0;
+		x = 1;
 		SetOil();
 	}
 	
@@ -30,11 +32,17 @@ public class StorageController : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		if (oil >= 5)
+		if (oil >= 5*x)
 		{
 			SpawnWorker ();
 			oil = oil - 5;
+			x++;
 			SetOil();
+		}
+		else
+		{
+			GetComponentInChildren<TextMesh>().text = "Not Enough Oil!";
+			Invoke("SetOil", 1);
 		}
 	}
 
@@ -54,7 +62,7 @@ public class StorageController : MonoBehaviour {
 			SetOil();
 		}
 	}
-	void SetOil ()
+	public void SetOil ()
 	{
 		GetComponentInChildren<TextMesh>().text = "Oil: " + oil.ToString();
 	}

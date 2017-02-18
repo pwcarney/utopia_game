@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorkerController : MonoBehaviour 
 {
 	public float speed = 1f;
+	public StorageController other;
 
 	private GameObject seeking_oil_patch;
 	private GameObject seeking_collector;
@@ -55,7 +56,6 @@ public class WorkerController : MonoBehaviour
 		} 
 		else if (other.tag == "Collector" && hasOil == true)
 		{
-
 			other.gameObject.GetComponent<StorageController>().oil++;
 			hasOil = false;
 		}
