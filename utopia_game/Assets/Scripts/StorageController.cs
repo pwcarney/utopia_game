@@ -35,7 +35,7 @@ public class StorageController : MonoBehaviour {
 		if (oil >= 5*x)
 		{
 			SpawnWorker ();
-			oil = oil - 5;
+			oil = oil - 5*x;
 			x++;
 			SetOil();
 		}

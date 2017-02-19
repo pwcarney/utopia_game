@@ -7,14 +7,14 @@ public class ResCount : MonoBehaviour {
 
 	public Text OilCount;
 
-	private int oil;
+	public int oil;
 
 
 
 	// Use this for initialization
 	void Start () 
 	{
-		oil = 0;
+		GameObject.Find("Storage Controller").GetComponent<StorageController>().oil = 0;
 		SetOil();	
 	}
 
@@ -27,15 +27,6 @@ public class ResCount : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		
+		SetOil ();
 	}
-
-	void OnTriggerEnter2D(Collider2D other) 
-    {
-		if (other.tag == "Worker")
-		{
-			oil = oil + 1;
-			SetOil ();
-		}
-    }
 }
