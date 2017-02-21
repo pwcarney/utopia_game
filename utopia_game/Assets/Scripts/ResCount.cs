@@ -9,10 +9,6 @@ public class ResCount : MonoBehaviour {
 	public StorageController SC;
 	private int TO;
 
-
-
-
-	// Use this for initialization
 	void Start () 
 	{
 		TO = 0; 
@@ -28,13 +24,10 @@ public class ResCount : MonoBehaviour {
 	{
 		OilCount.text = "Oil: " + TO.ToString();
 	}
-
-	
-	// Update is called once per frame
+		
 	void Update () 
 	{
 		TOUpdate();
-		Debug.Log(TO);
 		SetTOil ();
 	}
 }

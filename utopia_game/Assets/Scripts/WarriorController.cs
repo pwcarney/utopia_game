@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class WarriorController : MonoBehaviour {
 
-	public float speed = 1;
+	public float damage = 1f;
+	public float hitpoints = 5f;
+	public float speed = 1f;
+
 	public string enemy;
 	public float enemyDetectRadius;
 	public LayerMask unwalkableMask;
@@ -32,15 +35,6 @@ public class WarriorController : MonoBehaviour {
 	{
 		if (killed)
 			Destroy (this.gameObject);
-	}
-
-	void OnTriggerEnter2D(Collider2D other)
-	{
-		if (other.gameObject.tag == enemy) 
-		{
-			enemies.Remove (other.gameObject);
-			other.gameObject.GetComponent<WarriorController> ().Kill ();
-		}
 	}
 
 	Vector3 GetCurrentDestination()
@@ -121,6 +115,7 @@ public class WarriorController : MonoBehaviour {
 	{
 		while (true) 
 		{
+			Turn (destination);
 			transform.position = Vector2.MoveTowards (transform.position, destination, speed * Time.deltaTime);
 
 			yield return null;
@@ -144,13 +139,26 @@ public class WarriorController : MonoBehaviour {
 					}
 					currentWaypoint = path [targetIndex];
 				}
-
-				//transform.rotation = Quaternion.LookRotation(Vector3.forward, player.transform.position - transform.position);
+					
+				Turn (currentWaypoint);
 				transform.position = Vector2.MoveTowards (transform.position, currentWaypoint, speed * Time.deltaTime);
 
 				yield return null;
 
 			}
+		}
+	}
+
+	void Turn (Vector2 dest)
+	{
+		Vector3 facing = (Vector3)dest - transform.position;
+		transform.rotation = Quaternion.LookRotation(Vector3.forward, facing);
+		if (facing.x <= 0) {
+			transform.Rotate (new Vector3 (1, 1, -90));
+			GetComponent<SpriteRenderer> ().flipX = false;
+		} else {
+			transform.Rotate (new Vector3 (1, 1, 90));	
+			GetComponent<SpriteRenderer> ().flipX = true;
 		}
 	}
 
