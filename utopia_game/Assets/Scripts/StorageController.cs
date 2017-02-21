@@ -6,13 +6,12 @@ using UnityEngine.UI;
 public class StorageController : MonoBehaviour {
 
 	public GameObject workerPrefab;
-
-	/*GameObject tempTextBox = (GameObject.Instantiate (OilCount, Vector3.zero, Quaternion.identity));
-	TextMesh theText = tempTextBox.transform.GetComponent<TextMesh>();
-	private theText.Text "The Text"; */
-
+	public Text OilCount;
+	public static int TotalOil;
 	public int oil;
+
 	private int x;
+	private int cost;
 
 
 	// Use this for initialization
@@ -22,22 +21,25 @@ public class StorageController : MonoBehaviour {
 		oil = 0;
 		x = 1;
 		SetOil();
+		cost = 5*x;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		
+
 	}
 
 	void OnMouseDown()
 	{
-		if (oil >= 5*x)
+		if (oil >= cost)
 		{
 			SpawnWorker ();
-			oil = oil - 5*x;
+			oil = oil - cost;
+			TotalOil = TotalOil - cost;
 			x++;
 			SetOil();
+			cost = 5 * x;
 		}
 		else
 		{

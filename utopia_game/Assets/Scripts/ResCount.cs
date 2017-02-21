@@ -6,27 +6,35 @@ using UnityEngine.UI;
 public class ResCount : MonoBehaviour {
 
 	public Text OilCount;
+	public StorageController SC;
+	private int TO;
 
-	public int oil;
 
 
 
 	// Use this for initialization
 	void Start () 
 	{
-		GameObject.Find("Storage Controller").GetComponent<StorageController>().oil = 0;
-		SetOil();	
+		TO = 0; 
+		SetTOil ();	
 	}
 
-	void SetOil () 
+	public void TOUpdate ()
 	{
-		OilCount.text = "Oil: " + oil.ToString();
+		TO = StorageController.TotalOil;
+	}
+
+	void SetTOil () 
+	{
+		OilCount.text = "Oil: " + TO.ToString();
 	}
 
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		SetOil ();
+		TOUpdate();
+		Debug.Log(TO);
+		SetTOil ();
 	}
 }

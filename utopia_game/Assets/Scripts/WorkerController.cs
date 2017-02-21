@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorkerController : MonoBehaviour 
 {
 	public float speed = 1f;
-	public StorageController other;
+	public StorageController SC;
 
 	private GameObject seeking_oil_patch;
 	private GameObject seeking_collector;
@@ -48,15 +49,16 @@ public class WorkerController : MonoBehaviour
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D other) 
+	void OnTriggerEnter2D(Collider2D SC) 
 	{
-		if (other.tag == "Oil") 
+		if (SC.tag == "Oil") 
 		{
 			hasOil = true;
 		} 
-		else if (other.tag == "Collector" && hasOil == true)
+		else if (SC.tag == "Collector" && hasOil == true)
 		{
-			other.gameObject.GetComponent<StorageController>().oil++;
+			SC.gameObject.GetComponent<StorageController>().oil++;
+			StorageController.TotalOil++;
 			hasOil = false;
 		}
 	}
