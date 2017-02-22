@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class BuildingPlacementController : MonoBehaviour {
 
 	bool storagePlacement = false;
+	bool builderPlacement = false;
 	public GameObject storagePrefab;
+	public GameObject builderPrefab;
 	public Image storageButton;
 
 	void Update()
@@ -18,6 +20,11 @@ public class BuildingPlacementController : MonoBehaviour {
 			if (storagePlacement) 
 			{
 				Instantiate(storagePrefab, mousePos, Quaternion.identity);
+				LeavePlacementMode ();
+			}
+			if (builderPlacement) 
+			{
+				Instantiate(builderPrefab, mousePos, Quaternion.identity);
 				LeavePlacementMode ();
 			}
 		}
@@ -39,12 +46,31 @@ public class BuildingPlacementController : MonoBehaviour {
 			storageButton.color = buttonColor;
 		}
 	}
+	public void EnterBuilderPlacementMode()
+	{
+		if (!builderPlacement) 
+		{
+			builderPlacement = true;
+
+			Color buttonColor = storageButton.color;
+			buttonColor.a -= 0.5f;
+			storageButton.color = buttonColor;
+		}
+	}
 
 	void LeavePlacementMode()
 	{
 		if (storagePlacement) 
 		{
 			storagePlacement = false;
+
+			Color buttonColor = storageButton.color;
+			buttonColor.a += 0.5f;
+			storageButton.color = buttonColor;
+		}
+		if (builderPlacement) 
+		{
+			builderPlacement = false;
 
 			Color buttonColor = storageButton.color;
 			buttonColor.a += 0.5f;

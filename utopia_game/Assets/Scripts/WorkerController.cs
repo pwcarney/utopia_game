@@ -7,6 +7,7 @@ public class WorkerController : MonoBehaviour
 {
 	public float speed = 1f;
 	public StorageController SC;
+	public BuilderController BC;
 
 	private GameObject seeking_oil_patch;
 	private GameObject seeking_collector;
@@ -35,6 +36,7 @@ public class WorkerController : MonoBehaviour
 				collector_distance = dist_to_collector;
 			}
 		}
+
 	}
 
 	void Update () 
@@ -43,10 +45,11 @@ public class WorkerController : MonoBehaviour
 		{
 			transform.position = Vector2.MoveTowards (transform.position, seeking_oil_patch.transform.position, speed * Time.deltaTime);
 		} 
-		else 
+		else if (hasOil) 
 		{
 			transform.position = Vector2.MoveTowards (transform.position, seeking_collector.transform.position, speed * Time.deltaTime);
 		}
+
 	}
 
 	void OnTriggerEnter2D(Collider2D SC) 
