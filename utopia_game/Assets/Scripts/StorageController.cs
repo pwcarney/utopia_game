@@ -63,6 +63,13 @@ public class StorageController : MonoBehaviour {
 		{
 			SetOil();
 		}
+		if (other.tag == "BuildBot" && oil >= 2 && TotalOil >= 2)
+		{
+			oil = oil - 2;
+			TotalOil = TotalOil - 2;
+			SetOil();
+		}
+
 	}
 	public void SetOil ()
 	{
